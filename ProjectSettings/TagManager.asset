@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Tile
+  - Goal
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG
+    uniqueID: 1384255627
+    locked: 0
+  - name: Ground
+    uniqueID: 589583593
+    locked: 0
+  - name: FG
+    uniqueID: 729223719
     locked: 0

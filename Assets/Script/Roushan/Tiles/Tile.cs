@@ -17,7 +17,7 @@ public class Tile : MonoBehaviour
         move
     }
     public bool Enteractable;
-    [HideInInspector] public bool Connected;
+    public bool Connected = false;
     [HideInInspector] public bool Active;
 
     public TileType type;
@@ -50,7 +50,7 @@ public class Tile : MonoBehaviour
             int count = 0;
             foreach (Conditions cond in tile.condition)
             {
-                if (cond.conditionObj.eulerAngles == cond.eulerAngle && cond.conditionObj.localPosition == cond.localPosition) count++;
+                if (cond.conditionObj.localEulerAngles == cond.eulerAngle && cond.conditionObj.localPosition == cond.localPosition) count++;
             }
             tile.Active = (count == tile.condition.Length);
         }
@@ -78,24 +78,24 @@ public class Tile : MonoBehaviour
     {
         Sequence s = DOTween.Sequence();
 
-        s.AppendCallback(() => GameManager.instance.CutTheGrowth(this));
+        s.AppendCallback(() => PathManager.instance.CutTheGrowth(this));
         s.AppendCallback(() => Activate());
         s.Append(transform.DOLocalRotate(new Vector3(0, 0, 90), 0.3f, RotateMode.WorldAxisAdd).SetEase(Ease.OutBack));
         s.AppendCallback(() => ManageConnection());
         s.AppendCallback(() => DeActivate());
-        s.AppendCallback(() => GameManager.instance.GrowFurther());
+        s.AppendCallback(() => PathManager.instance.GrowFurther());
     }
     private void Move()
     {
         Sequence s = DOTween.Sequence();
 
-        s.AppendCallback(() => GameManager.instance.CutTheGrowth(this));
+        s.AppendCallback(() => PathManager.instance.CutTheGrowth(this));
         s.AppendCallback(() => Activate());
         s.Append(transform.DOLocalMove(MovePosition.positions[MovePosition.index++%MovePosition.positions.Length], 0.3f).SetEase(Ease.OutBack));
         s.AppendCallback(() => ManageConnection());
         s.AppendCallback(() => DeActivate());
 
-        s.AppendCallback(() => GameManager.instance.GrowFurther());
+        if(Connected)s.AppendCallback(() => PathManager.instance.GrowFurther());
     }
 
     public void Activate()
@@ -117,8 +117,9 @@ public class Tile : MonoBehaviour
 
     private void OnDrawGizmos()
     {     
-        Gizmos.color = Color.black;
+        Gizmos.color =(Enteractable)?Color.red: Color.black;
         Gizmos.DrawSphere(transform.position, 0.1f);
+        Gizmos.color =Color.black;
 
         for (int i=0; i<ConnectedTiles.Length; i++)
         {

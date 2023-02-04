@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class GameManager : MonoBehaviour
+public class PathManager : MonoBehaviour
 {
-    public static GameManager instance { get; set; }
+    public static PathManager instance { get; set; }
 
     #region VAR
     [Header("REFERENCE")]
@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
             BuildPath(lastConnectedTile);
 
             Sequence s = DOTween.Sequence();
+            s.AppendCallback(() => InputManager.instance.InputActivation(false));
             foreach (GameObject obj in path)
             {
                 obj.GetComponent<SpriteRenderer>().color = Color.white;
@@ -106,6 +107,7 @@ public class GameManager : MonoBehaviour
                     s.AppendCallback(() => CompleteGrowth());
                 }
             }
+            s.AppendCallback(() => InputManager.instance.InputActivation(true));
         }
         
     }
@@ -119,15 +121,21 @@ public class GameManager : MonoBehaviour
         }
 
         Sequence s = DOTween.Sequence();
+
+        s.AppendCallback(() => InputManager.instance.InputActivation(false));
         foreach (GameObject obj in path)
         {
             obj.GetComponent<SpriteRenderer>().color = Color.white;
 
             s.AppendCallback(() => obj.GetComponent<Tile>().Connected = true);
+            s.Append(Root.transform.DOMove(obj.transform.position, .2f).SetEase(Ease.Linear));
+
+            /*
             s.Append(obj.transform.DOScale(1.2f, .15f).SetEase(Ease.InBack));
             s.Append(obj.transform.DOScale(1, .15f).SetEase(Ease.OutBack));
-            s.Join(obj.GetComponent<SpriteRenderer>().material.DOColor(Color.yellow, .15f));
+            s.Join(obj.GetComponent<SpriteRenderer>().material.DOColor(Color.yellow, .15f));*/
         }
+        s.AppendCallback(() => InputManager.instance.InputActivation(true));
     }
 
     void BuildPath(Tile pTile)

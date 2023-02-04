@@ -5,11 +5,23 @@ using DG.Tweening;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager instance { get; set;}
+
     #region VAR
+    public bool InputActive = true;
+
     Vector2 origin;
     RaycastHit2D mouseRay;
     GameObject currentTile;
     #endregion
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+            Destroy(instance);
+        else if (instance == null)
+            instance = this;
+    }
 
     void Update()
     {
@@ -30,16 +42,15 @@ public class InputManager : MonoBehaviour
             currentTile = null;
         }
 
-        if (Input.GetMouseButtonDown(0) && currentTile && currentTile.GetComponent<Tile>().Enteractable && !currentTile.GetComponent<Tile>().Active)
+        if (InputActive && Input.GetMouseButtonDown(0) && currentTile && currentTile.GetComponent<Tile>().Enteractable && !currentTile.GetComponent<Tile>().Active)
         {
             currentTile.GetComponent<Tile>().DoActivity();
 
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            GameManager.instance.CompleteGrowth();
-        }
     }
 
-
+    public void InputActivation(bool active)
+    {
+        InputActive = active;
+    }
 }
