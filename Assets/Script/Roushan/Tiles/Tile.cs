@@ -23,6 +23,8 @@ public class Tile : MonoBehaviour
     public TileType type;
     public ActivityType Activetype;
 
+    public Collectables orb;
+
     public float tileSize = 1;
     public NeighbourTile[] ConnectedTiles;
 
@@ -54,7 +56,18 @@ public class Tile : MonoBehaviour
             int count = 0;
             foreach (Conditions cond in tile.condition)
             {
-                if (cond.conditionObj.localEulerAngles == cond.eulerAngle && cond.conditionObj.localPosition == cond.localPosition) count++;
+                if (cond.CondType == Conditions.Type.rotate)
+                {
+                    if (cond.conditionObj.localEulerAngles == cond.eulerAngle) count++;
+                }
+                else if (cond.CondType == Conditions.Type.move)
+                {
+                    if (cond.conditionObj.localPosition == cond.localPosition) count++;
+                }
+                else if (cond.CondType == Conditions.Type.both)
+                {
+                    if (cond.conditionObj.localEulerAngles == cond.eulerAngle && cond.conditionObj.localPosition == cond.localPosition) count++;
+                }
             }
             tile.Active = (count == tile.condition.Length);
         }
@@ -162,6 +175,13 @@ public class NeighbourTile
 [System.Serializable]
 public class Conditions
 {
+    public enum Type
+    {
+        rotate,
+        move,
+        both
+    }
+    public Type CondType;
     public Transform conditionObj;
     public Vector3 eulerAngle;
     public Vector3 localPosition;

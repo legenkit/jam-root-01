@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class Collectables : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    public enum Types
     {
-        if (collision.CompareTag("Root"))
-        {
-            Debug.Log("Collision Detected");
-            Destroy(this.gameObject);
-        }
+        orb,
+        poision
+    }
+
+    public Types type;
+
+    public void Absorb()
+    {
+        AudioManager.instance.PlayAudioClip(AudioManager.AudioType.orb);
+        if(type == Types.orb)
+            PathManager.instance.AddOrb(1);
+        else
+            PathManager.instance.AddOrb(-1);
+        Destroy(this.gameObject);
     }
 }

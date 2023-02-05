@@ -8,13 +8,17 @@ public class AudioManager : MonoBehaviour
     public enum AudioType
     {
         Start,
+        orb,
         Grow,
-        Join,
+        click,
         Explore,
         UI
     }
+    public AudioClip crawl;
 
-    [SerializeField] AudioSource Speaker;
+    public AudioSource Speaker;
+    public AudioSource MSpeaker;
+    public AudioSource RSpeaker;
 
     [Header("Audio's")]
     [SerializeField] SoundData[] Audios;
@@ -43,6 +47,14 @@ public class AudioManager : MonoBehaviour
                 Speaker.PlayOneShot(Sounds.Audio[Random.Range(0, Sounds.Audio.Length)]);
             }
         }
+    }
+    public void PlayCrawl()
+    {
+        RSpeaker.PlayOneShot(crawl); ;
+    }
+    public void StopCrawl()
+    {
+        RSpeaker.Stop();
     }
     #endregion
 }

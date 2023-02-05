@@ -11,7 +11,7 @@ public class LevelManager : MonoBehaviour
 
     #region DATA
     [Header("Handler")]
-    [SerializeField] Level[] Levels;
+    public Level[] Levels;
     [HideInInspector] public Level _CurrentLevel;
 
 
@@ -23,8 +23,6 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        //ManageLevel();
-        EventSubscription();
     }
     private void Start()
     {
@@ -39,14 +37,6 @@ public class LevelManager : MonoBehaviour
             level.LevelObj.SetActive(false);
         }
         _CurrentLevel.LevelObj.SetActive(true);
-    }
-    private void EventSubscription()
-    {
-        EventManager.LevelCleared += StageCleardAction;
-    }
-    private void OnDisable()
-    {
-        EventManager.LevelCleared -= StageCleardAction;
     }
     #endregion
 
@@ -66,6 +56,8 @@ public class LevelManager : MonoBehaviour
         {
             EventManager.PrepareLevel();
         }
+
+        AudioManager.instance.MSpeaker.volume = .5f;
     }
 
     public void StartLevel()
@@ -73,6 +65,12 @@ public class LevelManager : MonoBehaviour
         LevelStarted = true;
         PathManager.instance.InitializePath();
     }
+
+    public void DeactivateLevel()
+    {
+        _CurrentLevel.LevelObj.SetActive(false);
+    }
+
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -80,11 +78,14 @@ public class LevelManager : MonoBehaviour
     #endregion
 
     #region Event Methods
-    void StageCleardAction()
+    public void StageCleardAction(int orb)
     {
+
         _CurrentLevel.LevelCleared = true;
         LevelStarted = false;
-        AudioManager.instance.PlayAudioClip(AudioManager.AudioType.Start);
+        UIManager.instance.BringUI();
+        DataManager.instance.AddOrb(orb);
+        //AudioManager.instance.PlayAudioClip(AudioManager.AudioType.Start);
     }
     #endregion
 

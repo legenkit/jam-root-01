@@ -46,6 +46,7 @@ public class InputManager : MonoBehaviour
 
             if (InputActive && Input.GetMouseButtonDown(0) && currentTile && currentTile.GetComponent<Tile>().Enteractable && !currentTile.GetComponent<Tile>().Active)
             {
+                AudioManager.instance.PlayAudioClip(AudioManager.AudioType.click);
                 currentTile.GetComponent<Tile>().DoActivity();
 
             }

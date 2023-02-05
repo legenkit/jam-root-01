@@ -13,6 +13,8 @@ public class PathManager : MonoBehaviour
     public Tile StartTile;
     public Tile lastConnectedTile;
     Tile currentTile;
+
+    public int OrbCollected = 0;
     #region private
     public List<GameObject> path;
     #endregion
@@ -104,6 +106,7 @@ public class PathManager : MonoBehaviour
                 obj.transform.GetChild(0).GetComponent<SpriteRenderer>().color = Color.white;
 
                 s.AppendCallback(() => obj.GetComponent<Tile>().Connected = true);
+                s.AppendCallback(() => AudioManager.instance.PlayAudioClip(AudioManager.AudioType.Explore));
                 s.Append(obj.transform.DOScale(1.2f, .15f).SetEase(Ease.InBack));
                 s.Append(obj.transform.DOScale(1, .15f).SetEase(Ease.OutBack));
                 s.Join(obj.transform.GetChild(0).GetComponent<SpriteRenderer>().material.DOColor(Color.clear, .2f));
@@ -134,12 +137,12 @@ public class PathManager : MonoBehaviour
 
             s.AppendCallback(() => obj.GetComponent<Tile>().Connected = true);
             s.Append(Root.transform.DOMove(obj.transform.position, .2f).SetEase(Ease.Linear));
-
-            /*
-            s.Append(obj.transform.DOScale(1.2f, .15f).SetEase(Ease.InBack));
-            s.Append(obj.transform.DOScale(1, .15f).SetEase(Ease.OutBack));
-            s.Join(obj.GetComponent<SpriteRenderer>().material.DOColor(Color.yellow, .15f));*/
+            if(obj.GetComponent<Tile>().orb != null)
+            {
+                s.AppendCallback(() => obj.GetComponent<Tile>().orb.Absorb());
+            }
         }
+        s.AppendCallback(() => LevelManager.instance.StageCleardAction(OrbCollected));
         s.AppendCallback(() => InputManager.instance.InputActivation(true));
     }
 
@@ -164,6 +167,11 @@ public class PathManager : MonoBehaviour
         }
         path.Add(currentTile.gameObject);
         lastConnectedTile = currentTile;
+    }
+
+    public void AddOrb(int count)
+    {
+        OrbCollected += count;
     }
     #endregion
 

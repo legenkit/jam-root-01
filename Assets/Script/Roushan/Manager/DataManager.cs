@@ -8,7 +8,9 @@ public class DataManager : MonoBehaviour
     public static DataManager instance { get; set; }
 
     [Header("UI")]
-    [SerializeField] TextMeshProUGUI CoinText;
+    public int orbcount;
+
+    public string OrbId = "OrbId";
 
     #region DATA
     [Header("REFERENCE")]
@@ -39,13 +41,30 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        orbcount = PlayerPrefs.GetInt(OrbId);
+    }
+
+    #endregion
+
+    #region Data Management
+    public void AddOrb(int count)
+    {
+        orbcount += count;
+        UIManager.instance.UpdateUI();
+        SaveOrb();
+    }
+    void SaveOrb()
+    {
+        PlayerPrefs.SetInt(OrbId, orbcount);
+    }
     #endregion
 
     #region Event Method
     void UpdateEnemyCount(int i)
     {
         EnemyCount += i;
-        CoinText.SetText($"ENEMY = {EnemyCount}");
         if (EnemyCount == 0 && EventManager.LevelCleared != null)
             EventManager.LevelCleared();
     }
