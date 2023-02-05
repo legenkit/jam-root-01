@@ -4,6 +4,6 @@ using UnityEngine;
 
 public static class EventManager
 {
-    public static Action<int> EnemyCount;
+    public static Action PrepareLevel;
     public static Action LevelCleared;
 }

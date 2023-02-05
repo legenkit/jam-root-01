@@ -30,23 +30,27 @@ public class InputManager : MonoBehaviour
 
     void MyInput()
     {
-        origin = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
+        if (LevelManager.instance.LevelStarted)
+        {
+            origin = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
                                           Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-        mouseRay = Physics2D.Raycast(origin, Vector2.zero, 0f);
-        if (mouseRay && mouseRay.collider.CompareTag("Tile"))
-        {
-            currentTile = mouseRay.collider.gameObject;
-        }
-        else
-        {
-            currentTile = null;
-        }
+            mouseRay = Physics2D.Raycast(origin, Vector2.zero, 0f);
+            if (mouseRay && mouseRay.collider.CompareTag("Tile"))
+            {
+                currentTile = mouseRay.collider.gameObject;
+            }
+            else
+            {
+                currentTile = null;
+            }
 
-        if (InputActive && Input.GetMouseButtonDown(0) && currentTile && currentTile.GetComponent<Tile>().Enteractable && !currentTile.GetComponent<Tile>().Active)
-        {
-            currentTile.GetComponent<Tile>().DoActivity();
+            if (InputActive && Input.GetMouseButtonDown(0) && currentTile && currentTile.GetComponent<Tile>().Enteractable && !currentTile.GetComponent<Tile>().Active)
+            {
+                currentTile.GetComponent<Tile>().DoActivity();
 
+            }
         }
+        
     }
 
     public void InputActivation(bool active)

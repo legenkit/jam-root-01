@@ -26,7 +26,6 @@ public class DataManager : MonoBehaviour
     private void Awake()
     {
         MakeInstance();
-        EventSubscription();
     }
     void MakeInstance()
     {
@@ -40,14 +39,6 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    private void EventSubscription()
-    {
-        EventManager.EnemyCount += UpdateEnemyCount;
-    }
-    private void OnDisable()
-    {
-        EventManager.EnemyCount -= UpdateEnemyCount;
-    }
     #endregion
 
     #region Event Method

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tile
   - Goal
+  - Root
   layers:
   - Default
   - TransparentFX
@@ -51,4 +52,7 @@ TagManager:
     locked: 0
   - name: FG
     uniqueID: 729223719
+    locked: 0
+  - name: UI
+    uniqueID: 3748373117
     locked: 0

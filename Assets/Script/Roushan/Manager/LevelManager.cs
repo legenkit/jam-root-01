@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
@@ -22,7 +23,7 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        ManageLevel();
+        //ManageLevel();
         EventSubscription();
     }
     private void Start()
@@ -54,23 +55,24 @@ public class LevelManager : MonoBehaviour
     #endregion
 
     #region Public Methods
-    public void StartLevel()
+    public void PrepareLevel(int levelIndex)
     {
-        if (!_CurrentLevel.LevelCleared)
+        _CurrentLevel = Levels[levelIndex];
+        _CurrentLevel.LevelObj.SetActive(true);
+
+        //AudioManager.instance.PlayAudioClip(AudioManager.AudioType.Start);
+        PathManager.instance.StartTile = _CurrentLevel.First_Tile;
+        if(EventManager.PrepareLevel != null)
         {
-            AudioManager.instance.PlayAudioClip(AudioManager.AudioType.Start);
-            LevelStarted = true;
+            EventManager.PrepareLevel();
         }
     }
 
-    public void ChangeLevel(int LevelIndex, int GateIndex)
+    public void StartLevel()
     {
-        _CurrentLevel.LevelObj.SetActive(false);
-        _CurrentLevel = Levels[LevelIndex];
-        _CurrentLevel.LevelObj.SetActive(true);
-
+        LevelStarted = true;
+        PathManager.instance.InitializePath();
     }
-
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -91,5 +93,6 @@ public class LevelManager : MonoBehaviour
 public class Level
 {
     public GameObject LevelObj;
+    public Tile First_Tile;
     [HideInInspector] public bool LevelCleared = false;
 }

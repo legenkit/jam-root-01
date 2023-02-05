@@ -51,8 +51,7 @@ public class PathManager : MonoBehaviour
     void InitializeStuffs()
     {
         //Time.timeScale = 0;
-        lastConnectedTile = StartTile;
-        GrowFurther();
+        //InitializePath();
     }
     #endregion
 
@@ -64,6 +63,12 @@ public class PathManager : MonoBehaviour
     #endregion
 
     #region Public Events
+    public void InitializePath()
+    {
+        lastConnectedTile = StartTile ;
+        StartTile.Connected = true;
+        GrowFurther();
+    }
     public void CutTheGrowth(Tile tile)
     {
         if (tile.Connected)
@@ -80,7 +85,7 @@ public class PathManager : MonoBehaviour
                     s.AppendCallback(() => obj.GetComponent<Tile>().Connected = false);
                     s.Append(obj.transform.DOScale(1.2f, .1f).SetEase(Ease.InBack));    
                     s.Append(obj.transform.DOScale(1, .1f).SetEase(Ease.OutBack));
-                    s.Join(obj.GetComponent<SpriteRenderer>().material.DOColor(Color.white, .1f));
+                    s.Join(obj.transform.GetChild(0).GetComponent<SpriteRenderer>().material.DOColor(Color.white, .1f));
                 }
             }
         }
@@ -96,12 +101,12 @@ public class PathManager : MonoBehaviour
             s.AppendCallback(() => InputManager.instance.InputActivation(false));
             foreach (GameObject obj in path)
             {
-                obj.GetComponent<SpriteRenderer>().color = Color.white;
+                obj.transform.GetChild(0).GetComponent<SpriteRenderer>().color = Color.white;
 
                 s.AppendCallback(() => obj.GetComponent<Tile>().Connected = true);
                 s.Append(obj.transform.DOScale(1.2f, .15f).SetEase(Ease.InBack));
                 s.Append(obj.transform.DOScale(1, .15f).SetEase(Ease.OutBack));
-                s.Join(obj.GetComponent<SpriteRenderer>().material.DOColor(Color.yellow, .15f));
+                s.Join(obj.transform.GetChild(0).GetComponent<SpriteRenderer>().material.DOColor(Color.clear, .2f));
                 if(obj.GetComponent<Tile>().type == Tile.TileType.Goal)
                 {
                     s.AppendCallback(() => CompleteGrowth());

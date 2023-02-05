@@ -31,9 +31,13 @@ public class Tile : MonoBehaviour
     [SerializeField] Movement MovePosition;
 
     #region Script Initialization
-    private void Start()
+    private void Awake()
     {
-        ManageConnection();
+        EventManager.PrepareLevel += ManageConnection;
+    }
+    private void OnDisable()
+    {
+        EventManager.PrepareLevel -= ManageConnection;
     }
     #endregion
 
@@ -95,7 +99,16 @@ public class Tile : MonoBehaviour
         s.AppendCallback(() => ManageConnection());
         s.AppendCallback(() => DeActivate());
 
-        if(Connected)s.AppendCallback(() => PathManager.instance.GrowFurther());
+        if(AffectedTileConnected())s.AppendCallback(() => PathManager.instance.GrowFurther());
+    }
+    bool AffectedTileConnected()
+    {
+        bool result = false;
+        foreach (Tile item in AffectedTiles)
+        {
+            if (item.Connected) return true;
+        }
+        return result;
     }
 
     public void Activate()
