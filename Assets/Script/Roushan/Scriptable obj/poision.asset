@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4275493d8c4d038468b544c064c70e81, type: 3}
-  m_Name: poision
+  m_Name: Poision
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: ff00345da0563d641903c5bd5bb748a4, type: 3}
-  treelevel: 1
+  icon: {fileID: 21300000, guid: bed83c978feca9c44a05a1e64ff58046, type: 3}
+  treelevel: 0
   resource: salt
   levelIndex: 1
   button: {fileID: 0}

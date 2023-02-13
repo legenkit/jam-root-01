@@ -28,6 +28,7 @@ public class LevelBoard : MonoBehaviour
     {
 
         Icon.sprite = data.icon;
+        levelindex = data.levelIndex;
         if (Tree.instance.Level>=data.treelevel)
         {
             detailText.color = Color.white;
